@@ -13,4 +13,5 @@ for (string in factoring_cols) {
   opros[[string]] <- factor(opros[[string]])
 }
 quality_vars <- factoring_cols
-numeric_vars <- c("languages_number", "editors_number", "future_number")
+numeric_vars <- c("languages_number", "editors_number", "future_number",
+                  "humour", "other_opinion", "sugar_using", "python_discontent")

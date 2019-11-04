@@ -5,9 +5,7 @@ for (i in 1:nrow(unique_fisher)) {
   name <- paste(x, "~", y)
   h <- ggplot(opros, aes(x = opros[[x]], fill = opros[[y]], group = opros[[y]], stat(count)))+
     geom_density(alpha = 0.3, position = "fill")+
-    xlab(x)+
-    labs("aaa")
-    
+    xlab(x)
   ggsave(file = paste0(getwd(), "/plots/density_plots/", i, ".png"), plot = h, device = "png")
 }
 ggplot(opros, aes(x = status, group = gender, fill = gender))+

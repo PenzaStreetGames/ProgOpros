@@ -1,4 +1,4 @@
-factoring_cols <- c("gender", "status", "processor", "microboard", "destop_os", "mobile_os",       
+factoring_cols <- c("gender", "status", "processor", "microboard", "desctop_os", "mobile_os",       
                     "editor_theme", "cycle_recursion", "cycle", "java_kotlin", "zero_division", "indexing",     
                     "typing", "slow_python", "list_mutable", "sugar", "list_expressions", "ternar_module",  
                     "patterns", "mobile_desctop", "web", "back_front_end", "flask_django", "python",         
@@ -10,8 +10,12 @@ factoring_cols <- c("gender", "status", "processor", "microboard", "destop_os", 
                     "cryptography", "math")
 colnames(opros)
 for (string in factoring_cols) {
+  print(string)
   opros[[string]] <- factor(opros[[string]])
 }
+str(opros)
+opros$desctop_os <- factor(opros$desctop_os)
 quality_vars <- factoring_cols
 numeric_vars <- c("languages_number", "editors_number", "future_number",
-                  "humour", "other_opinion", "sugar_using", "python_discontent")
+                  "humour", "other_opinion", "sugar_using", "python_discontent",
+                  "middle_answers", "dont_know", "web_using", "apple")

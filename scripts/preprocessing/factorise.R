@@ -1,21 +1,142 @@
-factoring_cols <- c("gender", "status", "processor", "microboard", "desctop_os", "mobile_os",       
-                    "editor_theme", "cycle_recursion", "cycle", "java_kotlin", "zero_division", "indexing",     
-                    "typing", "slow_python", "list_mutable", "sugar", "list_expressions", "ternar_module",  
-                    "patterns", "mobile_desctop", "web", "back_front_end", "flask_django", "python",         
-                    "cpp", "javascript", "pascal", "csharp", "java", "c",             
-                    "php", "kotlin", "lua", "scratch", "basic", "go",           
-                    "ruby", "fasm", "bf", "haskel", "pycharm", "vscode",      
-                    "idle", "notepad", "notepadpp", "wing", "sublime", "jupiter",     
-                    "atom", "console", "machine_learning", "big_data", "metaprog", "quantum",     
-                    "cryptography", "math")
-colnames(opros)
-for (string in factoring_cols) {
-  print(string)
-  opros[[string]] <- factor(opros[[string]])
+factorise <- function(opros) {
+  factoring_cols <-
+    c(
+      "gender",
+      "status",
+      "processor",
+      "microboard",
+      "desctop_os",
+      "mobile_os",
+      "editor_theme",
+      "cycle_recursion",
+      "cycle",
+      "java_kotlin",
+      "zero_division",
+      "indexing",
+      "typing",
+      "slow_python",
+      "list_mutable",
+      "sugar",
+      "list_expressions",
+      "ternar_module",
+      "patterns",
+      "mobile_desctop",
+      "web",
+      "back_front_end",
+      "flask_django",
+      "python",
+      "cpp",
+      "javascript",
+      "pascal",
+      "csharp",
+      "java",
+      "c",
+      "php",
+      "kotlin",
+      "lua",
+      "scratch",
+      "basic",
+      "go",
+      "ruby",
+      "fasm",
+      "bf",
+      "haskel",
+      "pycharm",
+      "vscode",
+      "idle",
+      "notepad",
+      "notepadpp",
+      "wing",
+      "sublime",
+      "jupiter",
+      "atom",
+      "console",
+      "machine_learning",
+      "big_data",
+      "metaprog",
+      "quantum",
+      "cryptography",
+      "math"
+    )
+  colnames(opros)
+  for (string in factoring_cols) {
+    print(string)
+    opros[[string]] <- factor(opros[[string]])
+  }
+   factoring_cols
+  
+  return(opros)
 }
-str(opros)
-opros$desctop_os <- factor(opros$desctop_os)
-quality_vars <- factoring_cols
-numeric_vars <- c("languages_number", "editors_number", "future_number",
-                  "humour", "other_opinion", "sugar_using", "python_discontent",
-                  "middle_answers", "dont_know", "web_using", "apple")
+quality_vars <- 
+  c(
+  "gender",
+  "status",
+  "processor",
+  "microboard",
+  "desctop_os",
+  "mobile_os",
+  "editor_theme",
+  "cycle_recursion",
+  "cycle",
+  "java_kotlin",
+  "zero_division",
+  "indexing",
+  "typing",
+  "slow_python",
+  "list_mutable",
+  "sugar",
+  "list_expressions",
+  "ternar_module",
+  "patterns",
+  "mobile_desctop",
+  "web",
+  "back_front_end",
+  "flask_django",
+  "python",
+  "cpp",
+  "javascript",
+  "pascal",
+  "csharp",
+  "java",
+  "c",
+  "php",
+  "kotlin",
+  "lua",
+  "scratch",
+  "basic",
+  "go",
+  "ruby",
+  "fasm",
+  "bf",
+  "haskel",
+  "pycharm",
+  "vscode",
+  "idle",
+  "notepad",
+  "notepadpp",
+  "wing",
+  "sublime",
+  "jupiter",
+  "atom",
+  "console",
+  "machine_learning",
+  "big_data",
+  "metaprog",
+  "quantum",
+  "cryptography",
+  "math"
+)
+numeric_vars <-
+  c(
+    "languages_number",
+    "editors_number",
+    "future_number",
+    "humour",
+    "other_opinion",
+    "sugar_using",
+    "python_discontent",
+    "middle_answers",
+    "dont_know",
+    "web_using",
+    "apple"
+  )

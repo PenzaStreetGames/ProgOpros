@@ -1,7 +1,16 @@
-rm(list = ls())
+rm(numeric_vars, quality_vars)
 options(stringsAsFactors = F)
 library(readxl)
-opros <- read_excel("OprosProg.xlsx")
+opros <- read_excel("ProgOprosEdited.xlsx")
+opros <- factorise(opros)
+df_struct <- list()
+df_struct$numeric_vars <- numeric_vars
+df_struct$quality_vars <- quality_vars
+result <- list()
+
+without_number <- function(opros) {
+  opros[,2:ncol(opros)]
+}
 
 # NAs.R
 # wide_vars_split.R

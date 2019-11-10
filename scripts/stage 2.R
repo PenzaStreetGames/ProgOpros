@@ -8,8 +8,8 @@ sapply(opros, function(x)
 # all rigth
 
 # Double Fisher Test
-result$double_fisher_test <- lapply(opros, function(x) 
-  lapply(opros[sapply(opros, function(z) !all(as.vector(x) == as.vector(z)))], 
+result$double_fisher_test <- lapply(opros[df_struct$quality_vars], function(x) 
+  lapply(opros[df_struct$quality_vars][sapply(opros[df_struct$quality_vars], function(z) !all(as.vector(x) == as.vector(z)))], 
          function(y) fisher.test(table(x, y), simulate.p.value = T)))
 
 # Cor test Kendall

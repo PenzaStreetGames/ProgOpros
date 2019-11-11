@@ -7,7 +7,7 @@ df_struct <- list()
 df_struct$numeric_vars <- numeric_vars
 df_struct$quality_vars <- quality_vars
 result <- list()
-save(result, opros, df_struct, file = "result.RData")
+save(result, opros, df_struct, net, file = "result.RData")
 numered_opros <- opros
 opros$number <- NULL
 

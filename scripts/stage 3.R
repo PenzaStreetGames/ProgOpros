@@ -27,7 +27,16 @@ remove_obvious_edges <- function(data) {
     web_using = c("web", "flask_django"),
     middle_answers = c("processor", "desctop_os", "mobile_os", "cycle_recursion", 
                        "cycle", "java_kotlin", "slow_python", "list_mutable", "sugar",
-                       "mobile_desctop", "flask_django")
+                       "mobile_desctop", "flask_django"),
+    languages_number = c("python", "cpp",
+                        "javascript", "pascal", "csharp", "java", "c",
+                        "php", "kotlin", "lua", "scratch", "basic",
+                        "go", "ruby", "fasm", "bf", "haskel"),
+    editors_number = c("pycharm", "vscode", "idle", "notepad",
+                       "notepadpp", "wing", "sublime", "jupiter",
+                       "atom", "console"),
+    future_number = c("machine_learning", "big_data", "metaprog",
+                      "quantum", "cryptography", "math")
   )
   answer <- data.frame(x = c(), y = c(), p = c(), p_log = c())
   apply(result$important_edges$kruskal_test, 1, function(x) {
@@ -50,4 +59,3 @@ result$important_edges$kruskal_test <- remove_obvious_edges(result$important_edg
 # Uniting edges
 result$important_edges$all <- rbind(result$important_edges$fisher_test, result$important_edges$cor_test,
       result$important_edges$kruskal_test)
-

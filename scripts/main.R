@@ -6,6 +6,7 @@ opros <- factorise(opros)
 df_struct <- list()
 df_struct$numeric_vars <- numeric_vars
 df_struct$quality_vars <- quality_vars
+df_struct$vars <- colnames(opros)
 result <- list()
 save(result, opros, df_struct, net, file = "result.RData")
 numered_opros <- opros

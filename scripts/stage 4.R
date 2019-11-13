@@ -1,29 +1,32 @@
-# Graph creating
-net <- list()
-net$edges <- data.frame(from = result$important_edges$all$x,
-                        to = result$important_edges$all$y,
-                        weight = result$important_edges$all$p_log)
-net$vertices <- data.frame(
-  id = colnames(opros),
-  type = ifelse(colnames(opros) %in% df_struct$numeric_vars, "numeric", "quality"))
+x <- "gender"
+str(result$important_edges$all)
+result$edged_vars <- lapply(opros, function(x) {
+  x <- names(opros)[sapply(names(opros), function(y) all(as.vector(opros[[y]]) == as.vector(x)))]
+  r <- apply(result$important_edges$all[
+    apply(result$important_edges$all, 1, function(y)
+          y["x"] == x | y["y"] == x),], 1, function(y) {
+    ifelse(y["x"] == x, y["y"], y["x"])
+  })
+  names(r) <- NULL
+  r})
 
-library(igraph)
-create_graph <- function(var) {
-  t <- net$edges[apply(net$edges, 1, function(x) x["from"] == var | x["to"] == var),]
-  t1 <- unique(c(as.vector(t$from), as.vector(t$to)))
-  ifelse(t1 %in% df_struct$numeric_vars, "numeric", "quality")
-  graph <- graph.data.frame(t, data.frame(
-    id = t1,
-    type = unique(c(as.vector(t$from), as.vector(t$to)))), directed = F)
-  V(graph)$color <- ifelse(t1 %in% df_struct$numeric_vars, "orange", "skyblue")
-  E(graph)$width <- as.numeric(as.vector(t$weight))
-  plot(graph, layout=layout.fruchterman.reingold,
-       vertex.size = 30)
-}
-
-sapply(df_struct$vars, function(x) {
-  print(paste0("plots/dependence_graphs/", x, ".png"))
-  png(filename = paste0("plots/dependence_graphs/", x, ".png"))
-  create_graph(x)
-  dev.off()
+lapply(opros, function(x) {
+  x <- names(opros)[sapply(names(opros), function(y) all(as.vector(opros[[y]]) == as.vector(x)))]
+  if (length(result$edged_vars[[x]]) == 0)
+    return("Нет значимых предикторов")
+  if (x %in% df_struct$numeric_vars) {
+    data <- opros[c(x, result$edged_vars[[x]])]
+    fit <- lm(data[[1]] ~ data[[c(-1)]], data)
+    perf_fit <- step(fit, direction = "backward")
+    return(summary(perf_fit))
+  }
 })
+library(lazyeval)
+x <- "middle_answers"
+data <- opros[c(x, result$edged_vars[[x]])]
+fit <- lm(middle_answers ~ ., data)
+perf_fit <- step(fit, direction = "backward")
+result$regressions[[x]] <- summary(perf_fit)
+result$regressions[[x]]
+
+length(result$regressions)

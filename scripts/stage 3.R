@@ -50,16 +50,19 @@ remove_obvious_edges <- function(data) {
   answer
 }
 
-level <- 0.05
-result$important_edges$cor_test <- get_edges(result$cor_test_kendal, level)
-result$important_edges$fisher_test <- get_edges(result$double_fisher_test, 0.01)
-result$important_edges$kruskal_test <- get_edges(result$kruskal_test, level)
-result$important_edges$kruskal_test <- remove_obvious_edges(result$important_edges$kruskal_test)
-
-# Uniting edges
-result$important_edges$all <- rbind(result$important_edges$fisher_test, result$important_edges$cor_test,
-      result$important_edges$kruskal_test)
-result$important_edges$all$x <- as.character(result$important_edges$all$x)
-result$important_edges$all$y <- as.character(result$important_edges$all$y)
-result$important_edges$all$p <- as.numeric(result$important_edges$all$p)
-result$important_edges$all$p_log <- as.numeric(result$important_edges$all$p_log)
+get_all_edges <- function(level) {
+  result$important_edges$cor_test <<- get_edges(result$cor_test_kendal, level)
+  result$important_edges$fisher_test <<- get_edges(result$double_fisher_test, level)
+  result$important_edges$kruskal_test <<- get_edges(result$kruskal_test, level)
+  result$important_edges$kruskal_test <<- remove_obvious_edges(result$important_edges$kruskal_test)
+  
+  # Uniting edges
+  result$important_edges$all <<- rbind(result$important_edges$fisher_test, result$important_edges$cor_test,
+        result$important_edges$kruskal_test)
+  result$important_edges$all$x <<- as.character(result$important_edges$all$x)
+  result$important_edges$all$y <<- as.character(result$important_edges$all$y)
+  result$important_edges$all$p <<- as.numeric(result$important_edges$all$p)
+  result$important_edges$all$p_log <<- as.numeric(result$important_edges$all$p_log)
+  result$important_edges$all
+}
+get_all_edges(0.05)

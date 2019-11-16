@@ -27,6 +27,9 @@ without_number <- function(opros) {
 # chisq_and_fisher_tests.R
 # replaces_deletions.R
 
+library(ggplot2)
+qplot(x = mobile_os, data = opros, fill = gender, color = I("black"))
+
 hclust(opros[[c("gender", "status")]])
 
 dist_opros <- dist(opros)

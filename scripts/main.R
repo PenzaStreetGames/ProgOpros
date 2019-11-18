@@ -30,6 +30,7 @@ without_number <- function(opros) {
 library(ggplot2)
 qplot(x = mobile_os, data = opros, fill = gender, color = I("black"))
 
+
 hclust(opros[[c("gender", "status")]])
 
 dist_opros <- dist(opros)

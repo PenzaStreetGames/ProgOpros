@@ -1,0 +1,60 @@
+---
+title: "Опрос программистов"
+author: "Penza Street Analitics"
+output: 
+  html_document:
+    theme: darkly
+    highlight: tango
+    background: "#161a1e"
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+library(ggplot2)
+library(ggthemes)
+library(readxl)
+library(extrafont)
+font_import()
+loadfonts(device = "win")
+opros <- read_xlsx("ProgOprosEdited.xlsx")
+```
+
+```{r}
+theme_pablo <- theme(panel.background = element_rect(fill = "grey70"), 
+                     plot.background = element_rect(fill = "grey60"),
+                     legend.background = element_rect(fill = "grey80"),
+                     text = element_text(family = "Comic Sans MS"))
+```
+
+# Опрос программистов
+
+## Зависимость марки процессора и знания С++
+```{r}
+ggplot(opros, aes(x = cpp, fill = cpp, color = I("black")))+
+  geom_histogram(stat = "count", binwidth = 3)+
+  facet_wrap(~ editor_theme)+
+  scale_fill_brewer(name = "Знание С++",
+                    type = "qual", palette = 7)+
+  xlab("Знание С++")+
+  ylab("Частота")+
+  ggtitle("Зависимость марки процессора и знания С++")+
+  theme_pablo
+```
+
+## Зависимость недовольства скоростью питона и использованием редактора wing
+```{r}
+ggplot(opros, aes(x = wing, fill = wing, color = I("black")))+
+  geom_histogram(stat = "count", binwidth = 3)+
+  facet_wrap(~ slow_python)+
+  scale_fill_brewer(name = "Использование\nредактора wing",
+                    type = "qual", palette = 7)+
+  xlab("Недовольство скоростью питона")+
+  ylab("Частота")+
+  ggtitle(" Зависимость недовольства скоростью питона
+и использованием редактора wing")+
+  theme_pablo
+```

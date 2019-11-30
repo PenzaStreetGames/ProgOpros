@@ -28,8 +28,11 @@ without_number <- function(opros) {
 # replaces_deletions.R
 
 library(ggplot2)
-qplot(x = mobile_os, data = opros, fill = gender, color = I("black"))
-
+t <- table(ifelse(opros$mobile_os == "iOS", "iOS", "Не iOS"), 
+           ifelse(opros$gender == "Женский", "Женский", "Не женский"))
+fisher.test(t)
+chisq.test(t)
+result$double_tables$gender$mobile_os
 
 hclust(opros[[c("gender", "status")]])
 

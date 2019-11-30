@@ -31,3 +31,9 @@ table(opros$status)
 ggplot(opros, aes(python_discontent, color = processor)) +
   geom_density() +
   facet_grid(processor ~ .)
+
+idle_lab <- factor(opros$idle, labels = c("idle+", "idle-"))
+ggplot(opros, aes(console, fill = console, color = I("black"))) +
+  geom_histogram(stat = "count") +
+  facet_grid(factor(opros$notepad, labels= c("notepad+", "notepad-")) ~ 
+               factor(opros$idle, labels = c("idle+", "idle-")))

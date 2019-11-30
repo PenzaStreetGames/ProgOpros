@@ -9,3 +9,6 @@ rownames(result$edged_vars_list) <- NULL
 colnames(result$edged_vars_list)
 library(writexl)
 write_xlsx(result$edged_vars_list, path = "edges_research.xlsx")
+
+result$important_edges$all
+write_xlsx(result$important_edges$all, path = "edges_list.xlsx")

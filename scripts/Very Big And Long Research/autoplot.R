@@ -70,3 +70,13 @@ result$important_plots <- lapply(opros, function(x) {
              plot = plt, device = "png")}
     plt})})
 result$important_plots$gender$status
+result$important_plots <- lapply(opros, function(x) {
+  x <- find_opros_col(x)
+  lapply(opros[unlist(result$edged_vars[x])], function(y) {
+    y <- find_opros_col(y)
+    plt <- draw_plot(x, y)
+    i <- gsub("\"", "", gsub(" ", "_", gsub("\n ", "-", plt$labels$title)))
+    ggsave(file = paste0(getwd(), "/plots/important_plots_replaces/", i, ".png"), 
+           plot = plt, device = "png")
+    plt})})
+result$important_plots$gender$status

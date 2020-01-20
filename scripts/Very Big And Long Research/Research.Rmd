@@ -3,7 +3,7 @@ title: "Опрос программистов"
 author: "Penza Street Analitics"
 output: 
   html_document:
-    theme: darkly
+    theme: spacelab
     highlight: tango
     background: "#161a1e"
     toc: true
@@ -74,4 +74,275 @@ opros <- read_xlsx("ProgOprosEdited.xlsx")
 
 ## Математический аппарат исследования
 
+> Кто считает себя бородатым гуру статистики или просто не хочет вникать в вот это
+вот всё, может смело пропустить этот раздел.
+
+Математика - это всегда не просто, поэтому начнём издалека.
+
+В основе исследования лежит статистика как наука в её чистом виде. Субъекты исследования - программисты. Объект исследования - предпочтения и навыки 
+программистов и прочих посетителей опроса в мире информационных технологий.
+В данном случае, ответы - это свойства объектов, то есть опрошенных.
+
+Любые критерии могут быть разделены на качественные и количественные. Большинство
+критериев в опросе было качественными, так как не было вопросов в стиле "оцените
+это по шкале от 1 до 10". В это тоже есть минус опроса - нельзя ответить на вопрос
+"сколько?". Качественные признаки ещё называют номинативными.
+
+Однако, статистика на то и наука, что умеет много чего. Например:
+
+*Для одной переменной*:
+
+1. Если она качественная, проверить её на равномерность распределения (в каждой
+группе элементы встречаются одинаково часто)
+2. Если она количественная, проверить её на нормальность распределения (особый вид
+распределения, выглядит как-то так)
+![Нормальное распределение](normal_distribution.gif)
+За первый пункт отвечает 
+[Критерий Хи-квадрат](https://en.wikipedia.org/wiki/Chi-squared_test),
+а за второй 
+[Тест Шапиро-Уилка](https://en.wikipedia.org/wiki/Shapiro%E2%80%93Wilk_test).
+
+> Правда, как оказалось, данные вышли далеко не равномерные и не нормальные.
+Но статистика и это может обойти
+
+*Для двух переменных*:
+
+1. Если обе качественные, то проверить их на связанность, или *корреляцию*.
+2. Если одна качественная, а другая количественная, то проверить различие количественного
+признака при разбиении на группы.
+3. Если обе качественные, то проверить на пропорциональность групп по двум признакам.
+
+За первый пункт отвечает [Коэфиициент корреляции Пирсона](https://en.wikipedia.org/wiki/Pearson_correlation_coefficient),
+за второй - [Дисперсионный анализ](https://en.wikipedia.org/wiki/Analysis_of_variance),
+а за третий - [Точный тест Фишера](https://en.wikipedia.org/wiki/Fisher%27s_exact_test)
+
+> Правда, все первые два теста требуют "нормальности" данных, которой в этих данных нет.
+
+Поэтому существуют их непараметрические аналоги:
+
+1. [Коэффициент корреляции Кендала](https://en.wikipedia.org/wiki/Kendall_rank_correlation_coefficient)
+2. [Тест Краскела-Уоллиса](https://en.wikipedia.org/wiki/Kruskal%E2%80%93Wallis_one-way_analysis_of_variance)
+
+При визуализации данных будут использованы два вида графиков:
+
+1. [Столбчатая гистограмма](https://en.wikipedia.org/wiki/Bar_chart)
+![Гистограмма](Histogram.jpg)
+2. [Диаграмма рассеивания](https://en.wikipedia.org/wiki/Scatter_plot)
+![Диаграмма рассеивания](density_diagram.png)
+
 ## Программное обеспечение, использованное в исследовании
+
+> Кто не хочет вникать в то, что такое R, и как было реализовано это исследование, может
+смело пропускать этот раздел.
+
+### Ссылки на программное обеспечение
+
+В исследовании был использован язык программирования [**R**](https://www.r-project.org/)
+версии `r getRversion()`.
+
+Готовый файл статьи был получен с помощью пакета [RMarkdown](https://rmarkdown.rstudio.com)
+
+Для визуализации был использован пакет [ggplot2](https://ggplot2.tidyverse.org/),
+а также [ggthemes](https://CRAN.R-project.org/package=ggthemes). Для отображения
+красивых шрифтов на графиках был использован пакет
+[extrafont](https://CRAN.R-project.org/package=extrafont)
+
+Для загрузки и выгрузки данных через формат .xlsx были использованы библиотеки
+[readxl](https://CRAN.R-project.org/package=readxl) и
+[writexl](https://CRAN.R-project.org/package=writexl)
+
+### Код исследования
+
+Дабы не грузить читателей кодовыми вставками, весь код исследования будет записан 
+в одном месте - здесь.
+
+Полную версию кода исследования можно увидеть на
+[GitHub](https://github.com/PenzaStreetGames/ProgOpros)
+
+```{r}
+library(readxl)
+library(dplyr)
+opros <- read_excel("ProgOprosEdited.xlsx")
+opros <- select(opros, -number) # колонка номеров не нужна
+
+# Функция, преобразующая набор строк в фактор (словарь)
+factorise <- function(opros) {
+  factoring_cols <-
+    c(
+      "gender",
+      "status",
+      "processor",
+      "microboard",
+      "desctop_os",
+      "mobile_os",
+      "editor_theme",
+      "cycle_recursion",
+      "cycle",
+      "java_kotlin",
+      "zero_division",
+      "indexing",
+      "typing",
+      "slow_python",
+      "list_mutable",
+      "sugar",
+      "list_expressions",
+      "ternar_module",
+      "patterns",
+      "mobile_desctop",
+      "web",
+      "back_front_end",
+      "flask_django",
+      "python",
+      "cpp",
+      "javascript",
+      "pascal",
+      "csharp",
+      "java",
+      "c",
+      "php",
+      "kotlin",
+      "lua",
+      "scratch",
+      "basic",
+      "go",
+      "ruby",
+      "fasm",
+      "bf",
+      "haskel",
+      "pycharm",
+      "vscode",
+      "idle",
+      "notepad",
+      "notepadpp",
+      "wing",
+      "sublime",
+      "jupiter",
+      "atom",
+      "console",
+      "machine_learning",
+      "big_data",
+      "metaprog",
+      "quantum",
+      "cryptography",
+      "math"
+    )
+  colnames(opros)
+  for (string in factoring_cols) {
+    # print(string)
+    opros[[string]] <- factor(opros[[string]])
+  }
+  
+  return(opros)
+}
+df_struct <- list() # список, хранящий данные о структуре данных
+df_struct$numeric_vars <- # список количественных переменных
+  c(
+    "languages_number",
+    "editors_number",
+    "future_number",
+    "humour",
+    "other_opinion",
+    "sugar_using",
+    "python_discontent",
+    "middle_answers",
+    "dont_know",
+    "web_using",
+    "apple"
+  )
+df_struct$quality_vars <- # список качественных переменных
+  c(
+    "gender",
+    "status",
+    "processor",
+    "microboard",
+    "desctop_os",
+    "mobile_os",
+    "editor_theme",
+    "cycle_recursion",
+    "cycle",
+    "java_kotlin",
+    "zero_division",
+    "indexing",
+    "typing",
+    "slow_python",
+    "list_mutable",
+    "sugar",
+    "list_expressions",
+    "ternar_module",
+    "patterns",
+    "mobile_desctop",
+    "web",
+    "back_front_end",
+    "flask_django",
+    "python",
+    "cpp",
+    "javascript",
+    "pascal",
+    "csharp",
+    "java",
+    "c",
+    "php",
+    "kotlin",
+    "lua",
+    "scratch",
+    "basic",
+    "go",
+    "ruby",
+    "fasm",
+    "bf",
+    "haskel",
+    "pycharm",
+    "vscode",
+    "idle",
+    "notepad",
+    "notepadpp",
+    "wing",
+    "sublime",
+    "jupiter",
+    "atom",
+    "console",
+    "machine_learning",
+    "big_data",
+    "metaprog",
+    "quantum",
+    "cryptography",
+    "math"
+  )
+df_struct$vars <- colnames(opros) # список всех переменных
+result <- list() # список для хранения промежуточных и итоговых результатов
+
+opros <- factorise(opros) # факторизация всех сторковых столбцов
+# str(opros)
+
+## Стадия 1. Простая предобработка и гипотезы
+
+# Simple tables
+result$simple_tables <- list()
+result$simple_tables <- apply(opros, 2, function(x) 
+  round(prop.table(table(x)), digits = 3))
+
+# Simple Fisher Test
+result$simple_fisher_test <- apply(opros, 2, function(x)
+  chisq.test(table(x)))
+
+# Shapiro Test
+result$shapiro_test <- lapply(opros[df_struct$numeric_vars], 
+                              function(x) shapiro.test(x))
+
+```
+
+## Данные
+
+### Ссылка
+
+Используемые в опросе данные в предобработанном виде можно скачать по 
+[ссылке](https://yadi.sk/i/WmRRsDzbnQ9H-g)
+
+Для полноценной работы скрипта исследования следует скопировать файл данных в ту
+же директорию, что и файл *Research.Rmd*.
+
+### Структура данных
+
+```{r}
+knitr::kable(result$simple_tables$gender)
+```

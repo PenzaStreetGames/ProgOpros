@@ -992,3 +992,5 @@ ggplot(opros, aes(x = dont_know, fill = gender, color = I("black")))+
                     type = "qual", palette = 7)+
   scale_x_continuous(breaks = seq(1:10))+
   theme_pablo
+
+citation("ggplot2")

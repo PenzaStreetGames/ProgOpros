@@ -149,6 +149,85 @@ df_struct$quality_vars <- # список качественных перемен
     "math"
   )
 df_struct$vars <- colnames(opros) # список всех переменных
+df_struct$simple_vars <- # список логически полных переменных
+  c(
+    "gender",
+    "status",
+    "processor",
+    "microboard",
+    "desctop_os",
+    "mobile_os",
+    "editor_theme",
+    "cycle_recursion",
+    "cycle",
+    "java_kotlin",
+    "zero_division",
+    "indexing",
+    "typing",
+    "slow_python",
+    "list_mutable",
+    "sugar",
+    "list_expressions",
+    "ternar_module",
+    "patterns",
+    "mobile_desctop",
+    "web",
+    "back_front_end",
+    "flask_django",
+    "languages_number",
+    "editors_number",
+    "future_number",
+    "humour",
+    "other_opinion",
+    "sugar_using",
+    "python_discontent",
+    "middle_answers",
+    "dont_know",
+    "web_using",
+    "apple"
+  )
+df_struct$complex_vars <- # список сгруппированных переменных
+  list(
+    languages = c(
+      "python",
+      "cpp",
+      "javascript",
+      "pascal",
+      "csharp",
+      "java",
+      "c",
+      "php",
+      "kotlin",
+      "lua",
+      "scratch",
+      "basic",
+      "go",
+      "ruby",
+      "fasm",
+      "bf",
+      "haskel"
+    ),
+    editors = c(
+      "pycharm",
+      "vscode",
+      "idle",
+      "notepad",
+      "notepadpp",
+      "wing",
+      "sublime",
+      "jupiter",
+      "atom",
+      "console"
+    ),
+    futures = c(
+      "machine_learning",
+      "big_data",
+      "metaprog",
+      "quantum",
+      "cryptography",
+      "math"
+    )
+  )
 result <- list() # список для хранения промежуточных и итоговых результатов
 
 opros <- factorise(opros) # факторизация всех сторковых столбцов
@@ -356,6 +435,52 @@ var_labels <- c(gender = "Пол",
                 cryptography = "Ожидание\nразвития\nкриптографии",
                 math = "Ожидание\nразвития\nприкладной\nматематики")
 spaced_var_labels <- sapply(var_labels, function(x) gsub("\n", " ", x))
+full_var_labels <- c(
+  python = "01. Python",
+  cpp = "02. C++",        
+  javascript = "03. JavaScript",
+  pascal = "04. Pascal",
+  csharp = "05. C#",
+  java = "06. Java",
+  c = "07. C",
+  php = "08. PHP",
+  kotlin = "09. Kotlin",
+  lua = "10. Lua",      
+  scratch = "11. Scratch",
+  basic = "12. Basic",
+  go = "13. Go",
+  ruby = "14. Ruby",
+  fasm = "15. FASM",
+  bf = "16. Brainfuck",
+  haskel = "17. Haskel",
+  pycharm = "01. PyCharm",
+  vscode = "02. Visual Studio\nCode",
+  idle = "03. IDLE",
+  notepad = "04. Блокнот",
+  notepadpp = "05. Notepad++",
+  wing = "06. Wing",
+  sublime = "07. Sublime\nText",
+  jupiter = "08. Jupiter\nNotebook",
+  atom = "09. Atom", 
+  console = "10. Консоль",
+  machine_learning = "01. Машинное\nобучение",
+  big_data = "02. Большие\nданные",
+  metaprog = "03. Метапрограммирование",        
+  quantum = "04. Квантовая\nлогика",
+  cryptography = "05. Криптография",
+  math = "06. Прикладная\nматематика"
+)
+var_positive_flags <- c(
+  languages = "Использует",
+  editors = "Использует",
+  futures = "Ожидает"
+)
+complex_var_labels <- c(
+  languages = "Популярность\nязыков\nпрограммирования",
+  editors = "Популярность\nредакторов\nкода",
+  futures = "Популярность\nвозможных\nпередовых\nотраслей"
+)
+spaced_complex_var_labels <- sapply(complex_var_labels, function(x) gsub("\n", " ", x))
 
 ## Отрисовка графиков
 
@@ -424,8 +549,65 @@ draw_plot <- function(x, y) {
   }
   plt
 }
+draw_simple_plot <- function(x) {
+  if (x %in% df_struct$quality_vars) {
+    plt <- ggplot(opros, aes(x = opros[[x]], fill = opros[[x]], color = I("black")))+
+      geom_histogram(stat = "count")+
+      xlab(spaced_var_labels[x])+
+      ylab("Количество")+
+      ggtitle(paste("Распределение переменой\n", spaced_var_labels[x]))+
+      scale_fill_brewer(name = var_labels[x],
+                        type = "qual", palette = sample(1:8, size=1))+
+      theme_pablo
+  }
+  else if (x %in% df_struct$numeric_vars) {
+    random_color <- colors()[sample(1:length(colors()), size=1)]
+    plt <- ggplot(opros, aes(x = opros[[x]], fill = I(random_color), color = I("black")))+
+      geom_histogram(stat = "count")+
+      xlab(spaced_var_labels[x])+
+      ylab("Частота")+
+      ggtitle(paste("Распределение переменной\n", spaced_var_labels[x]))+
+      scale_fill_brewer(name = gsub(" ", "\n", var_labels[x]),
+                        type = "qual", palette = sample(1:8, size=1), 
+                        guide="colourbar")+
+      scale_x_continuous(breaks = seq(1:10))+
+      theme_pablo
+  }
+  plt
+}
+result$simple_plots <- lapply(opros, function(x) {
+  x <- find_opros_col(x)
+  plt <- draw_simple_plot(x)
+  plt
+})
+
+draw_complex_plot <- function(x) {
+  kit <- c()
+  for (i in 1:length(unlist(df_struct$complex_vars[x]))) {
+    y <- unlist(df_struct$complex_vars[x])[i]
+    kit <- c(kit, 
+             ifelse(opros[y] == var_positive_flags[x], full_var_labels[y], "none"))
+  }
+  kit <- data.frame(var = kit[kit != "none"])
+  kit$var <- factor(kit$var)
+  plt <- ggplot(kit, aes(x = var, fill = var, col = I("black")))+
+    geom_histogram(stat = "count")+
+    ggtitle(spaced_complex_var_labels[x])+
+    xlab(spaced_complex_var_labels[x])+
+    ylab("Частота")+
+    scale_fill_brewer(name = "Частота",
+                      type = "qual", palette = 3)+
+    theme_pablo
+  plt
+}
+
+result$complex_plots <- list()
+result$complex_plots$languages <- draw_complex_plot("languages")
+result$complex_plots$editors <- draw_complex_plot("editors")
+result$complex_plots$futures <- draw_complex_plot("futures")
+
 # gsub(" ", "_", gsub("\n ", "-", draw_plot("gender", "status")$labels$title))
-result$edged_vars
+# result$edged_vars
 df <- data.frame(x = c(), y = c())
 result$important_plots <- lapply(opros, function(x) {
   x <- find_opros_col(x)

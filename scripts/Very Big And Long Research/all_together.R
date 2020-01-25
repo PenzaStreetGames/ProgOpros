@@ -254,8 +254,8 @@ result$double_tables <- lapply(opros, function(x)
   lapply(opros, function(y) round(prop.table(table(x, y)), digits = 3)))
 
 # Check equals
-sapply(opros, function(x) 
-  sum(sapply(opros, function(y) all(as.vector(x) == as.vector(y)))))
+# sapply(opros, function(x) 
+#  sum(sapply(opros, function(y) all(as.vector(x) == as.vector(y)))))
 # all rigth
 
 # Double Fisher Test
@@ -343,13 +343,13 @@ get_all_edges <- function(level) {
   result$important_edges$all$p_log <<- as.numeric(result$important_edges$all$p_log)
   result$important_edges$all
 }
-get_all_edges(0.05)
+result$important_edges$all <- get_all_edges(0.05)
 
 find_opros_col <- function(x) {
   names(opros)[sapply(names(opros), function(y) all(as.vector(opros[[y]]) == as.vector(x)))]
 }
 
-str(result$important_edges$all)
+# str(result$important_edges$all)
 result$edged_vars <- lapply(opros, function(x) {
   x <- find_opros_col(x)
   r <- apply(result$important_edges$all[
@@ -359,7 +359,7 @@ result$edged_vars <- lapply(opros, function(x) {
       })
   names(r) <- NULL
   r})
-result$edged_vars
+# result$edged_vars
 
 result$edged_vars_list <- data.frame(var = df_struct$vars, 
                                      edged_vars = sapply(opros, function(x) {
@@ -635,6 +635,6 @@ graph <- graph.data.frame(net$edges, net$vertices, directed = F)
 V(graph)$color <- ifelse(net$vertices$id %in% df_struct$numeric_vars, "orange", "skyblue")
 E(graph)$width <- as.numeric(as.vector(net$edges$weight))
 l <- layout.kamada.kawai(graph)
-png(filename = "plots/graph.png", width = 1200, height = 900)
-result$egdes_graph <- plot(graph, layout= l, vertex.size = 15)
-dev.off()
+# result$egdes_graph <- plot(graph, layout= l, vertex.size = 15)
+
+result$simple_fisher_test$gender

@@ -637,4 +637,4 @@ E(graph)$width <- as.numeric(as.vector(net$edges$weight))
 l <- layout.kamada.kawai(graph)
 # result$egdes_graph <- plot(graph, layout= l, vertex.size = 15)
 
-result$simple_fisher_test$gender
+result$simple_plots$python_discontent
